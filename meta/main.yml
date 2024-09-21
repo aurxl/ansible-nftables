@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: aurxl
+  namespace: aurxl
+  role_name: nftables
+  description: nftables firewall
+  license: "license (GPL-3.0)"
+  min_ansible_version: "2.13"
+  platforms:
+  - name: EL
+    versions:
+    - all
+  - name: Debian
+    versions:
+    - all
+  galaxy_tags:
+    - system
+    - firewall
+    - linux
