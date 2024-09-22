@@ -1,0 +1,8 @@
+---
+- name: Install software
+  become: true
+  ansible.builtin.apt:
+    name: "{{ pkgs }}"
+    state: present
+    update_cache: true
+

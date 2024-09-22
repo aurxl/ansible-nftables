@@ -1,0 +1,19 @@
+---
+- name: Check for required vars
+  ansible.builtin.assert:
+    that: item is defined
+    success_msg: "{{ item }} is defined"
+    fail_msg: "{{ item }} is not defined"
+  loop: {{ required_vars }}
+
+- name: Include RHEL installation
+  ansible.builtin.include_role:
+    name: install/rhel.yml
+  when: ansible_facts["os_family"] == "RedHat"
+
+- name: Include Debian installation
+  ansible.builtin.include_role:
+    name: install/debian.yml
+  when: ansible_facts["os_family"] == "Debian"
+
+
