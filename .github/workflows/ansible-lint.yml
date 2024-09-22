@@ -1,0 +1,11 @@
+name: execute ansible lint
+
+on: push
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ansible lint
+        run: ansible-lint .
