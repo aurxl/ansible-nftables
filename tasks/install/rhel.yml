@@ -3,5 +3,5 @@
   become: true
   ansible.builtin.dnf:
     name: "{{ pkgs }}"
-    state: latest
+    state: present
     update_cache: true

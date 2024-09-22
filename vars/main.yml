@@ -2,4 +2,3 @@
 required_vars: []
 pkgs:
   - nftables
-
