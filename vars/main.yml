@@ -1,4 +1,3 @@
 ---
-required_vars: []
-pkgs:
+nft_pkgs:
   - nftables

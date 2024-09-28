@@ -18,16 +18,16 @@
   ansible.builtin.import_tasks: install/debian.yml
   when: ansible_facts["os_family"] == "Debian"
 
-- name: nftables packages are present
-  become: True
+- name: Nftables packages are present
+  become: true
   ansible.builtin.apt:
     name: "{{ nft_pkgs }}"
     state: present
-    update_cache: True
+    update_cache: true
   when: ansible_facts["os_family"] == "Debian"
 
 - name: Config dir exists
-  become: True
+  become: true
   ansible.builtin.file:
     path: "{{ nftables.config_dir }}"
     state: directory
@@ -36,7 +36,7 @@
     group: root
 
 - name: Template nftables.conf
-  become: True
+  become: true
   ansible.builtin.template:
     src: "etc/nftables.conf.j2"
     dest: "/etc/nftables.conf"
@@ -46,7 +46,7 @@
   notify: restart nftables
 
 - name: Template nftables vars
-  become: True
+  become: true
   ansible.builtin.template:
     src: "etc/nftables.d/vars.nft.j2"
     dest: "{{ nftables.config_dir }}/vars.nft"
@@ -57,18 +57,17 @@
   when: nftables.vars
 
 - name: Template nftables tables
-  become: True
+  become: true
   ansible.builtin.template:
     src: "etc/nftables.d/table.nft.j2"
-    dest: "{{ nftables.config_dir }}/{{ table.key }}"
+    dest: "{{ nftables.config_dir }}/{{ _table.key }}"
     mode: u=rwx,g=r,o=r
     owner: root
     group: root
   notify: restart nftables
-  vars: 
-    table: "{{ table.key }}"
-    chains: "{{ table.value }}"
+  vars:
+    table: "{{ _table.key }}"
+    chains: "{{ _table.value }}"
   loop: "{{ nftables.tables | dict2items }}"
   loop_control:
-    loop_var: "table"
-
+    loop_var: "_table"
