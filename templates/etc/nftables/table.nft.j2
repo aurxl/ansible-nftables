@@ -1,8 +1,14 @@
-table {{ item.key }} filter {
+table {{ table.key }} filter {
 
-    {% for chain, options in item.value %}
-    # chain {{ chain }} {
-        
+    {% for chain, options in chains %}
+    chain {{ chain }} {
+        {% if chain.hook is defined %}type {{ chain.type | default('filter') }} hook {{ chain.hook }} priority {{ chain.priority | default('0') }}
+
+        {{ chain.pre_jump | default('') }}
+
+        {{ chain.rules | default('') }}
+
+        {{ chain.post_jump | default('') }}
     }
     {% endfor %}
 
