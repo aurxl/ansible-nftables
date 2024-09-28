@@ -1,4 +1,8 @@
 ---
+- name: Combine defaults with vars
+  ansible.builtin.set_fact:
+    nftables: "{{ default_nftables | ansible.builtin.combine(nftables, recursive=true) }}"
+
 - name: Check for required vars
   ansible.builtin.assert:
     that: item is defined
@@ -13,3 +17,58 @@
 - name: Include Debian installation
   ansible.builtin.import_tasks: install/debian.yml
   when: ansible_facts["os_family"] == "Debian"
+
+- name: nftables packages are present
+  become: True
+  ansible.builtin.apt:
+    name: "{{ nft_pkgs }}"
+    state: present
+    update_cache: True
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Config dir exists
+  become: True
+  ansible.builtin.file:
+    path: "{{ nftables.config_dir }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: root
+    group: root
+
+- name: Template nftables.conf
+  become: True
+  ansible.builtin.template:
+    src: "etc/nftables.conf.j2"
+    dest: "/etc/nftables.conf"
+    mode: u=rwx,g=rx,o=rx
+    owner: root
+    group: root
+  notify: restart nftables
+
+- name: Template nftables vars
+  become: True
+  ansible.builtin.template:
+    src: "etc/nftables.d/vars.nft.j2"
+    dest: "{{ nftables.config_dir }}/vars.nft"
+    mode: u=rwx,g=r,o=r
+    owner: root
+    group: root
+  notify: restart nftables
+  when: nftables.vars
+
+- name: Template nftables tables
+  become: True
+  ansible.builtin.template:
+    src: "etc/nftables.d/table.nft.j2"
+    dest: "{{ nftables.config_dir }}/{{ table.key }}"
+    mode: u=rwx,g=r,o=r
+    owner: root
+    group: root
+  notify: restart nftables
+  vars: 
+    table: "{{ table.key }}"
+    chains: "{{ table.value }}"
+  loop: "{{ nftables.tables | dict2items }}"
+  loop_control:
+    loop_var: "table"
+

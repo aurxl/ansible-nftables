@@ -1,0 +1,3 @@
+{% for key, value in nftables.vars.items() %}
+define {{ key }}={{ value }}
+{% endfor %}

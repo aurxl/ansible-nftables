@@ -1,0 +1,4 @@
+---
+nft_pkgs:
+  - nftables
+
