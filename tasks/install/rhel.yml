@@ -2,6 +2,6 @@
 - name: Install software
   become: true
   ansible.builtin.dnf:
-    name: "{{ pkgs }}"
+    name: "{{ nft_pkgs }}"
     state: present
     update_cache: true

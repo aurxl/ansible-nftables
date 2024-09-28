@@ -1,3 +1,7 @@
 ---
+nft_required_vars: []
 nft_pkgs:
   - nftables
+
+nft_rhel_conf_file: "/etc/sysconfig/nftables.conf"
+nft_debian_conf_file: "/etc/nftables.conf"

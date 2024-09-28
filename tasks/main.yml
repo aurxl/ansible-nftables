@@ -8,7 +8,7 @@
     that: item is defined
     success_msg: "{{ item }} is defined"
     fail_msg: "{{ item }} is not defined"
-  loop: "{{ required_vars }}"
+  loop: "{{ nft_required_vars }}"
 
 - name: Include RHEL installation
   ansible.builtin.import_tasks: install/rhel.yml
@@ -31,39 +31,31 @@
   ansible.builtin.file:
     path: "{{ nftables.config_dir }}"
     state: directory
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwX,g=,o=
     owner: root
     group: root
-
-- name: Template nftables.conf
-  become: true
-  ansible.builtin.template:
-    src: "etc/nftables.conf.j2"
-    dest: "/etc/nftables.conf"
-    mode: u=rwx,g=rx,o=rx
-    owner: root
-    group: root
-  notify: restart nftables
 
 - name: Template nftables vars
   become: true
   ansible.builtin.template:
-    src: "etc/nftables.d/vars.nft.j2"
+    src: "etc/nftables/vars.nft.j2"
     dest: "{{ nftables.config_dir }}/vars.nft"
-    mode: u=rwx,g=r,o=r
+    mode: u=rwx,g=,o=
     owner: root
     group: root
+    validate: /usr/sbin/nft -c -f %s
   notify: restart nftables
   when: nftables.vars
 
 - name: Template nftables tables
   become: true
   ansible.builtin.template:
-    src: "etc/nftables.d/table.nft.j2"
+    src: "etc/nftables/table.nft.j2"
     dest: "{{ nftables.config_dir }}/{{ _table.key }}"
-    mode: u=rwx,g=r,o=r
+    mode: u=rwx,g=,o=
     owner: root
     group: root
+    validate: /usr/sbin/nft -c -f %s
   notify: restart nftables
   vars:
     table: "{{ _table.key }}"
@@ -71,3 +63,27 @@
   loop: "{{ nftables.tables | dict2items }}"
   loop_control:
     loop_var: "_table"
+
+- name: Template nftables.conf
+  become: true
+  ansible.builtin.template:
+    src: "etc/nftables.conf.j2"
+    dest: "{{ nft_rhel_conf_file }}"
+    mode: u=rwx,g=,o=
+    owner: root
+    group: root
+    validate: /usr/sbin/nft -c -f %s
+  when: ansible_facts["os_family"] == "RedHat"
+  notify: restart nftables
+
+- name: Template nftables.conf
+  become: true
+  ansible.builtin.template:
+    src: "etc/nftables.conf.j2"
+    dest: "{{ nft_debian_conf_file }}"
+    mode: u=rwx,g=,o=
+    owner: root
+    group: root
+    validate: /usr/sbin/nft -c -f %s
+  when: ansible_facts["os_family"] == "Debian"
+  notify: restart nftables
