@@ -1,19 +1,19 @@
 table {{ table }} filter {
-{%for chain, options in chains.items() %}
+{% for chain, options in chains.items() %}
     chain {{ chain }} {
-        {% if options.hook is defined %}type {{ options.type | default('filter') }} hook {{ options.hook }} priority {{ options.priority | default('0') }}; policy {{ options.policy | default('drop') }};{% endif %}
+{%   if options.hook is defined %}
+        type {{ options.type | default('filter') }} hook {{ options.hook }} priority {{ options.priority | default('0') }}; policy {{ options.policy | default('drop') }};
+{%   endif %}
 
-        {% for chain in options.pre_chain | default([]) -%}
+{%   for chain in options.pre_chain | default([]) %}
         jump {{ chain | default('') }}
-        {% endfor -%}
+{%   endfor %}
 
         {{ options.rules | default('') | indent(8)}}
-        
-        {% for chain in options.post_chain | default([]) -%}
-        jump {{ chain | default('') }}
-        {% endfor -%}
 
+{%   for chain in options.post_chain | default([]) %}
+        jump {{ chain | default('') }}
+{%   endfor %}
     }
 {% endfor %}
-
 }

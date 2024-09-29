@@ -55,7 +55,7 @@
     mode: u=rwx,g=,o=
     owner: root
     group: root
-    # validate: /usr/sbin/nft -c -f %s
+    validate: /usr/sbin/nft -c -f %s
   notify: restart nftables
   vars:
     table: "{{ _table.key }}"
@@ -72,7 +72,7 @@
     mode: u=rwx,g=,o=
     owner: root
     group: root
-    # validate: /usr/sbin/nft -c -f %s
+    validate: /usr/sbin/nft -c -f %s
   when: ansible_facts["os_family"] == "RedHat"
   notify: restart nftables
 
@@ -84,6 +84,6 @@
     mode: u=rwx,g=,o=
     owner: root
     group: root
-    # validate: /usr/sbin/nft -c -f %s
+    validate: /usr/sbin/nft -c -f %s
   when: ansible_facts["os_family"] == "Debian"
   notify: restart nftables
