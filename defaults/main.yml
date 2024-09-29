@@ -1,0 +1,4 @@
+---
+default_nftables:
+  enabled: false
+  config_dir: /etc/nftables

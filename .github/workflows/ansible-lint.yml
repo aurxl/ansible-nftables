@@ -1,0 +1,13 @@
+name: execute ansible lint
+
+on: push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ansible-lint
+        run: sudo apt install ansible-lint
+      - name: Ansible lint
+        run: ansible-lint .
