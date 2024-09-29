@@ -8,24 +8,23 @@ Ansible role installing and configuring nftables
 Default values are filled in. Table ip and chain input for example.
 ```yaml
 nftables:
-    enable: False
-    routing: False
-    vars: ""
-    tables:
-      ip:
-        input:
-          hook: ""
-          priority: 0
-          type: filter
-          policy: drop
-          pre_chain: []
-          post_chain: []
-          rules: ""
+  enable: False
+  routing: False
+  vars: {}
+  tables:
+    ip:
+      input:
+        hook: ""
+        priority: 0
+        type: filter
+        policy: drop
+        pre_chain: []
+        post_chain: []
+        rules: ""
 ```
 
-## Example confing:
+## Example config:
 ```yaml
-
 nftables:
   enable: true
   routing: false
@@ -55,7 +54,7 @@ nftables:
         hook: input
         policy: drop
         pre_chain:
-          - gobal
+          - global
           - input
         rules: |
           tcp dport {80, 443} accept
