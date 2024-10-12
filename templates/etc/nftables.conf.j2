@@ -1,0 +1,10 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+include "{{ nftables.config_dir }}/vars.nft"
+
+{% for table, _ in nftables.tables.items()  %}
+include "{{ nftables.config_dir }}/{{ table }}.nft"
+{% endfor %}
+

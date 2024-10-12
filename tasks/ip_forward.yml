@@ -1,0 +1,5 @@
+---
+- name: enable ip package forwarding
+  ansible.builtin.sysctl:
+    name: ip.forwarding:
+
