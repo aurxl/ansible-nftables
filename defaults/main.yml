@@ -1,4 +1,5 @@
 ---
 default_nftables:
   enabled: false
+  routing: false
   config_dir: /etc/nftables

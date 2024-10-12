@@ -1,15 +1,20 @@
 # ansible-nftables
-Ansible role installing and configuring nftables
 
 [![ansible lint](https://github.com/aurxl/ansible-nftables/actions/workflows/ansible-lint.yml/badge.svg)](https://github.com/aurxl/ansible-nftables/actions/workflows/ansible-lint.yml)
 [![Publish role on Ansible Galaxy](https://github.com/aurxl/ansible-nftables/actions/workflows/push_to_galaxy.yml/badge.svg)](https://github.com/aurxl/ansible-nftables/actions/workflows/push_to_galaxy.yml)
+
+Ansible role installing and configuring nftables.
+
+## Concept
+
 
 ## Format
 Default values are filled in. Table ip and chain input for example.
 ```yaml
 nftables:
   enable: False
-  routing: False
+  ip_forward_v4: false
+  ip_forward_v6: false
   vars: {}
   tables:
     ip:
@@ -27,7 +32,8 @@ nftables:
 ```yaml
 nftables:
   enable: true
-  routing: false
+  ip_forward_v4: true
+  ip_forward_v6: false
   vars:
     if_lan: ens18
     ip_lan: 10.1.1.8
