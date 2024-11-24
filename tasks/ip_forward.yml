@@ -1,5 +1,18 @@
 ---
-- name: enable ip package forwarding
-  ansible.builtin.sysctl:
-    name: ip.forwarding:
+- name: enable ipv4 package forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+  when: nftables.ip_forward_v4
 
+- name: enable ipv6 package forwarding
+  ansible.posix.sysctl:
+    name: net.ipv6.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true
+  when: nftables.ip_forward_v6
