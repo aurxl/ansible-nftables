@@ -1,4 +1,4 @@
-name: execute ansible lint
+name: ansible lint
 
 on: push
 
